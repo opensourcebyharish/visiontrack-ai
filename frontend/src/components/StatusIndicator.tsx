@@ -17,14 +17,16 @@ interface StatusIndicatorProps {
 
 export function StatusIndicator({ tone, label, pulse = false }: StatusIndicatorProps) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-base-700 bg-base-800 px-3 py-1 text-xs font-medium text-slate-300">
-      <span className="relative flex h-2.5 w-2.5">
+    <span className="inline-flex items-center gap-2 rounded-full border border-base-700/60 bg-space-800/70 px-2.5 py-1 text-xs font-medium text-ink-secondary">
+      <span aria-hidden="true" className="relative flex h-2 w-2">
         {pulse && (
           <span
             className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${toneClasses[tone]}`}
           />
         )}
-        <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${toneClasses[tone]}`} />
+        <span
+          className={`relative inline-flex h-2 w-2 rounded-full ${toneClasses[tone]}`}
+        />
       </span>
       {label}
     </span>

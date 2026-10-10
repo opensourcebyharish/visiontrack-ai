@@ -19,13 +19,18 @@ export function Card({
 }: CardProps) {
   return (
     <section
-      className={`rounded-xl border border-base-700 bg-base-850/70 shadow-lg shadow-black/20 ${className}`}
+      className={`panel-glass relative rounded-xl shadow-panel ${className}`}
     >
+      {/* Subtle cinematic hairline accent along the top edge. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-xl bg-gradient-to-r from-transparent via-cyan/50 to-transparent opacity-60"
+      />
       {(title || actions) && (
-        <header className="flex items-center justify-between gap-3 border-b border-base-700 px-4 py-3">
+        <header className="flex items-center justify-between gap-3 border-b border-base-700/60 px-4 py-3">
           <div>
-            {title && <h2 className="text-sm font-semibold text-slate-100">{title}</h2>}
-            {subtitle && <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>}
+            {title && <h2 className="text-sm font-semibold text-ink-primary">{title}</h2>}
+            {subtitle && <p className="mt-0.5 text-xs text-ink-muted">{subtitle}</p>}
           </div>
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </header>

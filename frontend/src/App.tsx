@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Header } from "./components/Header";
@@ -42,8 +42,31 @@ function Shell() {
   const location = useLocation();
   const meta = PAGE_META[location.pathname] ?? PAGE_META["/"];
 
+  // Close the off-canvas navigation with Escape; the overlay unmounts and the
+  // sidebar stops participating in focus once hidden.
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [sidebarOpen]);
+
   return (
     <div className="flex min-h-screen bg-base-950">
+      <a
+        href="#main-content"
+        onClick={(event) => {
+          // HashRouter owns the # fragment; prevent the jump and focus the
+          // content region directly so the route is untouched.
+          event.preventDefault();
+          document.getElementById("main-content")?.focus();
+        }}
+        className="skip-link"
+      >
+        Skip to main content
+      </a>
       <Sidebar open={sidebarOpen} onNavigate={() => setSidebarOpen(false)} />
       {sidebarOpen && (
         <button
@@ -58,7 +81,7 @@ function Shell() {
           subtitle={meta.subtitle}
           onMenu={() => setSidebarOpen((value) => !value)}
         />
-        <main className="min-w-0 flex-1 p-4 lg:p-6">
+        <main id="main-content" tabIndex={-1} className="min-w-0 flex-1 p-4 lg:p-6">
           <Routes>
             <Route path="/" element={<Overview />} />
             <Route path="/live" element={<LiveDetection />} />
@@ -69,7 +92,7 @@ function Shell() {
             <Route path="*" element={<Overview />} />
           </Routes>
         </main>
-        <footer className="border-t border-base-700 px-4 py-3 text-center text-[11px] text-slate-600 lg:px-6">
+        <footer className="border-t border-base-700 px-4 py-3 text-center text-[11px] text-ink-muted lg:px-6">
           VisionTrack AI · local-first computer vision · YOLO + ByteTrack + FastAPI
         </footer>
       </div>

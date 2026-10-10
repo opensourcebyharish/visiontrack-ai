@@ -196,7 +196,7 @@ frontend/src/
 ├── services/api.ts    # typed fetch client (single source of API truth)
 ├── hooks/useApi.ts    # useAsync / usePolling data hooks
 ├── types/index.ts     # shared types mirroring the Pydantic schemas
-├── components/        # Card, MetricCard, tables, charts, sliders, overlay...
+├── components/        # Card, MetricCard, tables, charts, sliders, overlay, ConfirmDialog...
 └── pages/             # Overview, LiveDetection, VideoAnalysis, Analytics, History, Settings
 ```
 
@@ -209,6 +209,30 @@ frontend/src/
   `http://127.0.0.1:8000` in dev and same-origin (`""`) in the production build.
 - **Live view** uses the MJPEG url directly in an `<img>` and polls
   `/sessions/{id}/live` for metrics and current detections.
+
+### Design system and accessibility
+
+The UI is a token-driven "command center" theme: palette, surfaces, borders and
+glows live in `tailwind.config.js` plus CSS variables in `src/index.css`, so every
+page consumes the same cyan/violet/amber language (green = FPS, amber = inference,
+cyan = events, violet = tracks). Charts keep readable axes, legends and tooltips.
+
+The redesign is presentational — `services/api.ts`, `types/index.ts`, routing and
+polling cadence are unchanged. Accessibility is built into the shell and shared
+components:
+
+- a **skip link** (`App.tsx`) focuses `#main-content`; because the app uses
+  `HashRouter`, the handler calls `preventDefault()` so the route fragment is not
+  clobbered;
+- the off-canvas sidebar is `invisible` (and out of the tab order) when closed on
+  small screens, and closes on **Escape**;
+- destructive actions use the reusable **`ConfirmDialog`** (`role="alertdialog"`,
+  `aria-modal`, focus trap, Escape-to-cancel, focus restored to the trigger)
+  instead of `window.confirm`;
+- status/success/error use `role="status"` / `role="alert"` live regions, while
+  high-frequency telemetry (FPS, latency) is intentionally *not* announced;
+- `prefers-reduced-motion` collapses decorative animation, with visible
+  `:focus-visible` rings and accessible names for icon-only controls.
 
 ## 8. Security boundaries
 

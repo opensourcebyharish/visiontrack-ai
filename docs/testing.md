@@ -87,14 +87,30 @@ npm run build       # production bundle
 $ npm run typecheck     -> exit 0
 $ npm run lint          -> exit 0 (no warnings)
 $ npm run build         -> exit 0
-   dist/index.html                0.51 kB
-   dist/assets/index-*.css       18.34 kB │ gzip:  4.22 kB
-   dist/assets/index-*.js       649.74 kB │ gzip: 183.57 kB
-   built in ~11s
+   dist/index.html                1.00 kB │ gzip:   0.52 kB
+   dist/assets/index-*.css       32.94 kB │ gzip:   6.94 kB
+   dist/assets/index-*.js       674.48 kB │ gzip: 189.35 kB
+   built in ~5.7s
 ```
 
 Vite prints a "chunks larger than 500 kB" advisory. It is a bundling hint
 (largely Recharts), not an error.
+
+### Responsive & accessibility verification
+
+No automated a11y tooling is a project dependency, so this was checked manually
+against the running production build:
+
+- layout stays within the viewport at ~320, 375, 768 and 1024 px and desktop —
+  metric grids reflow, filter rows wrap, wide tables scroll horizontally instead
+  of hiding data or row actions;
+- the skip link is the first Tab stop and moves focus to `#main-content` without
+  changing the `HashRouter` route;
+- the mobile sidebar closes on `Escape` and is removed from the tab order when
+  hidden;
+- delete / reset / cleanup open the themed `ConfirmDialog`: focus moves into it,
+  Tab is trapped, `Escape` cancels, and focus returns to the triggering button;
+- decorative animation collapses under `prefers-reduced-motion`.
 
 ## 3. End-to-end smoke test
 
