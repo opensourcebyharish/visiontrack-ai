@@ -45,8 +45,10 @@ SQLite and exportable as CSV.
 - **Event logging & analytics** — detection events sampled to SQLite, class
   distribution, events-over-time, per-session performance and comparison charts.
 - **Export** — CSV and JSON-friendly schemas; annotated video download.
-- **Polished dark dashboard** — Overview, Live Detection, Video Analysis,
-  Analytics, History and Settings pages.
+- **Polished dark dashboard** — a token-driven "command center" theme
+  (deep-space glass panels, cyan/violet accents) across Overview, Live Detection,
+  Video Analysis, Analytics, History and Settings, with responsive tables, a
+  keyboard skip link, themed confirmation dialogs and reduced-motion support.
 - **Robust lifecycle** — background workers, graceful cancellation, resource
   cleanup on shutdown, bounded concurrency, no stack traces leaked to clients.
 
@@ -219,6 +221,26 @@ Open **http://127.0.0.1:8000**. Interactive API docs are at `/docs`.
 5. **Settings** — detection thresholds, model, tracker, input size (down to 192),
    camera capture resolution, frame interval, event sampling, line crossing and
    data retention / cleanup. Settings apply to new sessions.
+
+## Accessibility & responsive design
+
+The dashboard is usable with a keyboard and on small screens — the redesign is
+presentational only and does not change any API call or poll cadence:
+
+- **Skip link** — the first Tab stop moves focus to the main content region
+  (implemented safely for `HashRouter`, without altering the route).
+- **Keyboard & screen readers** — visible focus rings, labelled icon-only
+  buttons, `role="status"` / `role="alert"` regions for save/error and backend
+  state; high-frequency telemetry (FPS, latency) is deliberately not announced.
+- **Confirmation dialogs** — destructive actions (delete session, reset settings,
+  run cleanup) use a themed, accessible dialog with focus trapping,
+  Escape-to-cancel and focus restored to the triggering control.
+- **Reduced motion** — decorative animation (scanline sweep, status pulses)
+  collapses under `prefers-reduced-motion`.
+- **Responsive** — metric grids, page headers, filters, forms and charts reflow;
+  wide tables scroll horizontally rather than hiding data or row actions.
+- **Live video** — the annotated MJPEG view keeps its aspect ratio and the
+  detection list scrolls, so both resize cleanly on narrow screens.
 
 ## API reference
 

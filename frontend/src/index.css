@@ -2,42 +2,247 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------------------
+   VisionTrack AI — cinematic dark theme (Phase 0)
+   Token-driven: palette, surfaces, borders, shadows and focus states live in
+   CSS variables so every later phase can consume them via var(--…).
+--------------------------------------------------------------------------- */
+
 @layer base {
+  :root {
+    /* Deep-space palette */
+    --bg-deep: #03050a;
+    --bg-base: #070b14;
+    --bg-elevated: #0d1422;
+
+    /* Electric accents */
+    --cyan: #22d3ee;
+    --cyan-soft: #67e8f9;
+    --violet: #8b5cf6;
+    --violet-soft: #a78bfa;
+
+    /* Text — near-white primary, cool-gray secondary/muted */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #8094ac;
+
+    /* Surfaces & borders */
+    --surface-1: rgba(13, 20, 34, 0.55);
+    --surface-2: rgba(19, 27, 46, 0.6);
+    --surface-3: rgba(27, 36, 56, 0.6);
+    --border-subtle: rgba(148, 163, 184, 0.12);
+    --border-strong: rgba(148, 163, 184, 0.22);
+
+    /* Glows & focus ring */
+    --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.25), 0 0 60px rgba(34, 211, 238, 0.1);
+    --glow-violet: 0 0 20px rgba(139, 92, 246, 0.25), 0 0 60px rgba(139, 92, 246, 0.1);
+    --ring-focus: 0 0 0 4px rgba(34, 211, 238, 0.16);
+
+    /* Typography */
+    --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+    --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+  }
+
   html {
     color-scheme: dark;
+    background-color: var(--bg-deep);
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 211, 238, 0.45) rgba(7, 11, 20, 0.7);
   }
 
   body {
-    @apply bg-base-950 text-slate-200 antialiased;
+    min-height: 100vh;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Cinematic aurora backdrop. Painted above the root background and below
+     app content; it reveals itself wherever a surface is translucent (the
+     shell turns glass in Phase 1). */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(900px 480px at 12% -10%, rgba(34, 211, 238, 0.1), transparent 60%),
+      radial-gradient(900px 520px at 105% 8%, rgba(139, 92, 246, 0.12), transparent 55%),
+      radial-gradient(1200px 700px at 50% 120%, rgba(34, 211, 238, 0.05), transparent 60%);
+  }
+
+  /* Space Grotesk for headings, Inter for body (see :root --font-*). */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: rgba(34, 211, 238, 0.28);
+    color: #ffffff;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  /* Native control tint; existing class-based overrides (e.g. accent-accent)
+     still win thanks to :where() having zero specificity. */
+  :where(input[type="checkbox"], input[type="radio"], input[type="range"]) {
+    accent-color: var(--cyan);
+  }
+
+  /* Accessible keyboard focus: visible on any Tab-focusable element. */
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+    box-shadow: var(--ring-focus);
+  }
+
+  /* Scrollbars — slim, cyan→violet gradient thumb on a dark track. */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #10141d;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #2f3a52;
-    border-radius: 6px;
-    border: 2px solid #10141d;
+    background: linear-gradient(180deg, rgba(34, 211, 238, 0.4), rgba(139, 92, 246, 0.4));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #3c4a68;
+    background: linear-gradient(180deg, rgba(103, 232, 249, 0.6), rgba(167, 139, 250, 0.6));
+    background-clip: padding-box;
   }
 }
 
 @layer components {
+  /* Form fields — glass surface + cyan focus ring. Keeps the prior sizing and
+     color language so existing `.field` usages keep working. */
   .field {
-    @apply w-full rounded-lg border border-base-700 bg-base-800 px-2 py-1.5 text-xs text-slate-200 focus:border-accent focus:outline-none disabled:opacity-50;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-subtle);
+    background-color: rgba(13, 20, 34, 0.6);
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    color: var(--text-primary);
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .field::placeholder {
+    color: var(--text-muted);
+  }
+
+  .field:hover {
+    border-color: var(--border-strong);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: var(--ring-focus);
+  }
+
+  .field:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Futuristic panel shell for cards, sidebars and headers. */
+  .panel-glass {
+    background-color: var(--surface-1);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Keyboard-accessible skip link (WCAG 2.4.1): invisible until focused,
+     then pinned above everything in the shell. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-250%);
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(34, 211, 238, 0.6);
+    background-color: rgba(13, 20, 34, 0.95);
+    color: var(--text-primary);
+    box-shadow: var(--glow-cyan);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease;
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
 @layer utilities {
+  /* Reusable visual utilities (Phase 1 components will consume these). */
+  .text-gradient {
+    background-image: linear-gradient(120deg, var(--cyan-soft) 0%, var(--violet-soft) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-cyan {
+    box-shadow: var(--glow-cyan);
+  }
+
+  .glow-violet {
+    box-shadow: var(--glow-violet);
+  }
+
+  .glass {
+    background-color: var(--surface-1);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .glass-strong {
+    background-color: var(--surface-2);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Preserved from the original stylesheet. */
   @keyframes pulse-ring {
     0% {
       transform: scale(0.8);
@@ -47,5 +252,17 @@
       transform: scale(1.8);
       opacity: 0;
     }
+  }
+}
+
+/* Respect reduced-motion preferences: collapse decorative motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

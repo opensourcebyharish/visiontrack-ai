@@ -21,18 +21,18 @@ export function Header({ title, subtitle, onMenu }: HeaderProps) {
     : "CPU";
 
   return (
-    <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-base-700 bg-base-950/85 px-4 py-3 backdrop-blur lg:px-6">
+    <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-base-700/60 bg-space-900/80 px-4 py-3 backdrop-blur-xl lg:px-6">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenu}
-          className="rounded-lg border border-base-700 p-2 text-slate-300 hover:bg-base-800 lg:hidden"
+          className="rounded-lg border border-base-700/60 p-2 text-ink-secondary transition-colors hover:bg-white/5 hover:text-ink-primary active:scale-95 lg:hidden"
           aria-label="Toggle navigation"
         >
           <Menu size={18} />
         </button>
         <div>
-          <h1 className="text-base font-semibold text-slate-100">{title}</h1>
-          {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
+          <h1 className="text-base font-semibold text-ink-primary">{title}</h1>
+          {subtitle && <p className="text-xs text-ink-muted">{subtitle}</p>}
         </div>
       </div>
 
@@ -47,15 +47,15 @@ export function Header({ title, subtitle, onMenu }: HeaderProps) {
           label={deviceLabel}
         />
         {system.data && (
-          <div className="hidden items-center gap-3 rounded-full border border-base-700 bg-base-800 px-3 py-1 text-xs text-slate-400 md:flex">
+          <div className="hidden items-center gap-3 rounded-full border border-base-700/60 bg-space-800/70 px-3 py-1 text-xs text-ink-secondary md:flex">
             <span className="inline-flex items-center gap-1">
-              <Cpu size={13} /> {system.data.python_version}
+              <Cpu size={13} className="text-cyan-soft/70" /> {system.data.python_version}
             </span>
             <span className="inline-flex items-center gap-1">
-              <Zap size={13} /> YOLO
+              <Zap size={13} className="text-cyan-soft/70" /> YOLO
             </span>
             <span className="inline-flex items-center gap-1">
-              <Server size={13} /> v{system.data.version}
+              <Server size={13} className="text-cyan-soft/70" /> v{system.data.version}
             </span>
           </div>
         )}
