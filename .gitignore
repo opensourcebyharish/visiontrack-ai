@@ -1,0 +1,59 @@
+# --- Python / backend ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/.venv/
+venv/
+.venv/
+
+# --- Node / frontend ---
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+frontend/npm-install.log
+
+# --- Models (large binaries, downloaded on demand) ---
+models/*.pt
+models/*.onnx
+models/*.engine
+
+# --- Data / runtime artefacts ---
+data/uploads/*
+data/outputs/*
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/*.mp4
+!data/uploads/.gitkeep
+!data/outputs/.gitkeep
+
+# --- Local environment / secrets ---
+.env
+.env.local
+*.local
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# --- Additional local secrets ---
+.env.*
+!.env.example
+
+# --- Additional databases and generated videos ---
+*.sqlite
+*.sqlite3
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# --- Local runtime and generated files ---
+*.pt

@@ -1,0 +1,17 @@
+.git
+.gitignore
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+backend/.venv
+**/node_modules
+frontend/dist
+data/uploads
+data/outputs
+data/*.db
+data/*.mp4
+models/*.pt
+*.log
+.env
+README.md
+docs

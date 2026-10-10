@@ -1,0 +1,28 @@
+# VisionTrack AI — optional single-container deployment (CPU inference).
+#
+#   docker compose up --build
+#   # open http://localhost:8000
+#
+# Place at least one approved weight in ./models before starting, e.g.
+# ./models/yolo11n.pt. Webcam capture is not available inside the container;
+# use the Video Analysis upload instead.
+
+services:
+  visiontrack:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: visiontrack-ai:latest
+    ports:
+      - "8000:8000"
+    environment:
+      VISIONTRACK_DATA_DIR: /app/data
+      VISIONTRACK_MODELS_DIR: /app/models
+      VISIONTRACK_MAX_CONCURRENT_JOBS: "1"
+    volumes:
+      - ./models:/app/models:ro
+      - visiontrack-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  visiontrack-data:
